@@ -1,7 +1,6 @@
 package com.eric.mulek.messagingcircuitbreaker.config;
 
 import com.eric.mulek.messagingcircuitbreaker.MessagingCircuitBreakerListener;
-import com.eric.mulek.messagingcircuitbreaker.policy.FixedBackOffCircuitBreakerPolicy;
 import com.eric.mulek.messagingcircuitbreaker.policy.MessagingCircuitBreakerPolicy;
 import com.eric.mulek.messagingcircuitbreaker.threshold.AverageTimeBetweenErrorThreshold;
 import com.eric.mulek.messagingcircuitbreaker.threshold.ConsecutiveErrorThreshold;
@@ -38,11 +37,6 @@ public class MessagingCircuitBreakerConfig {
                 properties.getAverageTimeBetweenErrors().getMaxWindowSize(),
                 properties.getAverageTimeBetweenErrors().getMinWindowSize(),
                 properties.getAverageTimeBetweenErrors().getThresholdInMilliseconds());
-    }
-
-    @Bean
-    FixedBackOffCircuitBreakerPolicy fixedBackOffCircuitBreakerPolicy(@Qualifier("circuitBreakerLock") ReentrantLock reentrantLock) {
-        return new FixedBackOffCircuitBreakerPolicy(reentrantLock, 5, null, null);
     }
 
     @Bean
