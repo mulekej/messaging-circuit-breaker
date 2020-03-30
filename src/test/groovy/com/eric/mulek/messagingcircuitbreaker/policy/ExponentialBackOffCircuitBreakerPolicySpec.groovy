@@ -7,7 +7,7 @@ class ExponentialBackOffCircuitBreakerPolicySpec extends Specification {
     ExponentialBackOffCircuitBreakerPolicy systemUnderTest
 
     void setup() {
-        systemUnderTest = new ExponentialBackOffCircuitBreakerPolicy()
+        systemUnderTest = Mock()
     }
 
     void "Name"() {

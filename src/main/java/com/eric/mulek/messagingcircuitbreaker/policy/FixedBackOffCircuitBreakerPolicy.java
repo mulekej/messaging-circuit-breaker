@@ -12,13 +12,13 @@ public class FixedBackOffCircuitBreakerPolicy implements MessagingCircuitBreaker
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ReentrantLock lock;
-    private long backOffWindowInMilliseconds;
+    private FixedBackoffPolicyConfiguration configuration;
     private Lifecycle endpointRegistry;
     private ThreadHelper threadHelper;
 
-    public FixedBackOffCircuitBreakerPolicy(ReentrantLock lock, long backOffWindowInMilliseconds, Lifecycle endpointRegistry, ThreadHelper threadHelper) {
+    public FixedBackOffCircuitBreakerPolicy(ReentrantLock lock, FixedBackoffPolicyConfiguration configuration, Lifecycle endpointRegistry, ThreadHelper threadHelper) {
         this.lock = lock;
-        this.backOffWindowInMilliseconds = backOffWindowInMilliseconds;
+        this.configuration = configuration;
         this.endpointRegistry = endpointRegistry;
         this.threadHelper = threadHelper;
     }
@@ -28,7 +28,7 @@ public class FixedBackOffCircuitBreakerPolicy implements MessagingCircuitBreaker
         if (lock.tryLock()) {
             try {
                 endpointRegistry.stop();
-                threadHelper.sleep(backOffWindowInMilliseconds);
+                threadHelper.sleep(configuration.getBackOffWindowInSeconds() * 1000);
             } catch (InterruptedException e) {
                 logger.warn("event=MessagingListenerSleepInterrupted", e);
             } finally {

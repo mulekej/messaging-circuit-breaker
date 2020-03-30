@@ -12,25 +12,22 @@ public class ExponentialBackOffCircuitBreakerPolicy implements MessagingCircuitB
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private int initialWaitPeriodInSeconds;
-    private int maxWaitPeriodInSeconds;
+    private ExponentialBackoffPolicyConfiguration configuration;
     private int currentWaitPeriodInSeconds;
     private final ReentrantLock lock;
     private ThreadHelper threadHelper;
     private Lifecycle endpointRegistry;
 
-    public ExponentialBackOffCircuitBreakerPolicy(int initialWaitPeriodInSeconds,
-                                                  int maxWaitPeriodInSeconds,
+    public ExponentialBackOffCircuitBreakerPolicy(ExponentialBackoffPolicyConfiguration configuration,
                                                   ReentrantLock lock,
                                                   ThreadHelper threadHelper,
                                                   Lifecycle endpointRegistry) {
-        this.initialWaitPeriodInSeconds = initialWaitPeriodInSeconds;
-        this.maxWaitPeriodInSeconds = maxWaitPeriodInSeconds;
+        this.configuration = configuration;
         this.lock = lock;
         this.threadHelper = threadHelper;
         this.endpointRegistry = endpointRegistry;
 
-        currentWaitPeriodInSeconds = initialWaitPeriodInSeconds;
+        currentWaitPeriodInSeconds = configuration.getInitialWaitPeriodInSeconds();
     }
 
     @Override
@@ -39,7 +36,7 @@ public class ExponentialBackOffCircuitBreakerPolicy implements MessagingCircuitB
         if (lock.tryLock()) {
             try {
                 endpointRegistry.stop();
-                threadHelper.sleep(currentWaitPeriodInSeconds);
+                threadHelper.sleep(currentWaitPeriodInSeconds*1000);
             } catch (InterruptedException e) {
                 logger.warn("event=MessagingListenerSleepInterrupted", e);
             } finally {
@@ -51,15 +48,15 @@ public class ExponentialBackOffCircuitBreakerPolicy implements MessagingCircuitB
     }
 
     private void incrementWaitPeriod() {
-        int increasedWaitPeriod = currentWaitPeriodInSeconds * initialWaitPeriodInSeconds;
-        currentWaitPeriodInSeconds = Math.min(maxWaitPeriodInSeconds, increasedWaitPeriod);
+        int increasedWaitPeriod = currentWaitPeriodInSeconds * configuration.getInitialWaitPeriodInSeconds();
+        currentWaitPeriodInSeconds = Math.min(configuration.getMaxWaitPeriodInSeconds(), increasedWaitPeriod);
     }
 
     @Override
     public void clear() {
         if (lock.tryLock()) {
             try {
-                currentWaitPeriodInSeconds = initialWaitPeriodInSeconds;
+                currentWaitPeriodInSeconds = configuration.getInitialWaitPeriodInSeconds();
             } finally {
                 lock.unlock();
             }
