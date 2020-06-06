@@ -1,4 +1,4 @@
-package com.eric.mulek.messagingcircuitbreaker;
+package com.eric.mulek.messagingcircuitbreaker.event;
 
 import com.eric.mulek.messagingcircuitbreaker.policy.MessagingCircuitBreakerPolicy;
 import com.eric.mulek.messagingcircuitbreaker.threshold.MessagingCircuitBreakerThreshold;

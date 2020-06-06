@@ -1,6 +1,7 @@
 package com.eric.mulek.messagingcircuitbreaker
 
 import com.eric.mulek.messagingcircuitbreaker.config.MessagingCircuitBreakerConfig
+import com.eric.mulek.messagingcircuitbreaker.event.MessagingCircuitBreakerListener
 import com.eric.mulek.messagingcircuitbreaker.policy.MessagingCircuitBreakerPolicy
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired

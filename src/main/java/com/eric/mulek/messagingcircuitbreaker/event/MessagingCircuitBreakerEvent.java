@@ -1,4 +1,4 @@
-package com.eric.mulek.messagingcircuitbreaker;
+package com.eric.mulek.messagingcircuitbreaker.event;
 
 import org.springframework.context.ApplicationEvent;
 

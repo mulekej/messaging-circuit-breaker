@@ -1,6 +1,6 @@
 package com.eric.mulek.messagingcircuitbreaker.threshold;
 
-import com.eric.mulek.messagingcircuitbreaker.MessagingCircuitBreakerEvent;
+import com.eric.mulek.messagingcircuitbreaker.event.MessagingCircuitBreakerEvent;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
